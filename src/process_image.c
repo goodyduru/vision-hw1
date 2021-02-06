@@ -38,7 +38,6 @@ image copy_image(image im)
             }
         }
     }
-    free_image(im);
     return copy;
 }
 
@@ -56,7 +55,6 @@ image rgb_to_grayscale(image im)
             set_pixel(gray, i, j, 0, pixel);
         }
     }
-    free_image(im);
     return gray;
 }
 
