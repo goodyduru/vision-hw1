@@ -83,8 +83,24 @@ image convolve_image(image im, image filter, int preserve)
 
 image make_highpass_filter()
 {
-    // TODO
-    return make_image(1,1,1);
+    int i, j;
+    image blank_image =  make_image(3,3,1);
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            if ( i == 1 || j == 1 ) {
+                if ( i == 1 && j == 1 ) {
+                    set_pixel(blank_image, i, j, 0, 4.0);
+                }
+                else {
+                    set_pixel(blank_image, i, j, 0, -1.0);
+                }
+            }
+            else {
+                set_pixel(blank_image, i, j, 0, 0.0);
+            }
+        }
+    }
+    return blank_image;
 }
 
 image make_sharpen_filter()
