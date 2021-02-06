@@ -9,6 +9,7 @@
 void l1_normalize(image im)
 {
     int i, j, k;
+    float pixel;
     float sum = 0.0;
     // Sum all pixels
     for (i = 0; i < im.w; i++) {
@@ -21,7 +22,8 @@ void l1_normalize(image im)
     for (i = 0; i < im.w; i++) {
         for (j = 0; j < im.h; j++) {
             for (k = 0; k < im.c; k++) {
-                set_pixel(im, i, j, k, 1/sum);
+                pixel = get_pixel(im, i, j, k);
+                set_pixel(im, i, j, k, pixel/sum);
             }
         }
     }
