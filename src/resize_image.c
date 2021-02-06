@@ -56,10 +56,12 @@ float bilinear_interpolate(image im, float x, float y, int c)
     top_right_pixel = get_pixel(im, ceil_x, floor_y, c);
     top_middle = left * top_right_pixel + right * top_left_pixel;
 
+    // Do the same but for the bottom pixels.
     bottom_left_pixel = get_pixel(im, floor_x, ceil_y, c);
     bottom_right_pixel = get_pixel(im, ceil_x, ceil_y, c);
     bottom_middle = left * bottom_right_pixel + right * bottom_left_pixel;
 
+    // Do the same with the linearly interpolated pixels.
     pixel = bottom * top_middle + top * bottom_middle;
     return pixel;
 }
