@@ -155,10 +155,10 @@ image make_sharpen_filter()
 }
 
 // Question 2.2.1: Which of these filters should we use preserve when we run our convolution and which ones should we not? Why?
-// Answer: TODO
+// Answer: Use preserve for sharpen filter.
 
 // Question 2.2.2: Do we have to do any post-processing for the above filters? Which ones and why?
-// Answer: TODO
+// Answer: Maybe emboss
 
 image make_gaussian_filter(float sigma)
 {
