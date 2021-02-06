@@ -84,7 +84,7 @@ image convolve_image(image im, image filter, int preserve)
 image make_highpass_filter()
 {
     int i, j;
-    image blank_image =  make_image(3,3,1);
+    image blank_image = make_image(3,3,1);
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
             if ( i == 1 || j == 1 ) {
@@ -103,10 +103,39 @@ image make_highpass_filter()
     return blank_image;
 }
 
+image make_emboss_filter()
+{
+    int i, j;
+    image blank_image = make_image(3,3,1);
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            if ( i == 0 && j == 0 ) {
+                set_pixel(blank_image, i, j, 0, -2.0);
+            }
+            else if ( (i == 1 && j == 0 ) || ( i == 0 && j == 1) ) {
+                set_pixel(blank_image, i, j, 0, -1.0);
+            }
+            else if ( (i == 2 && j == 0 ) || ( i == 0 && j == 2) ) {
+                set_pixel(blank_image, i, j, 0, 0.0);
+            }
+            else if ( i == 1 && j == 1 ) {
+                set_pixel(blank_image, i, j, 0, 1.0);
+            }
+            else if ( (i == 1 && j == 2 ) || ( i == 2 && j == 1) ) {
+                set_pixel(blank_image, i, j, 0, 1.0);
+            }
+            else {
+                set_pixel(blank_image, i, j, 0, 2.0);
+            }
+        }
+    }
+    return blank_image;
+}
+
 image make_sharpen_filter()
 {
     int i, j;
-    image blank_image =  make_image(3,3,1);
+    image blank_image = make_image(3,3,1);
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
             if ( i == 1 || j == 1 ) {
@@ -123,12 +152,6 @@ image make_sharpen_filter()
         }
     }
     return blank_image;
-}
-
-image make_emboss_filter()
-{
-    // TODO
-    return make_image(1,1,1);
 }
 
 // Question 2.2.1: Which of these filters should we use preserve when we run our convolution and which ones should we not? Why?
