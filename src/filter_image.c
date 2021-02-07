@@ -221,25 +221,76 @@ image sub_image(image a, image b)
 
 image make_gx_filter()
 {
-    // TODO
-    return make_image(1,1,1);
+    image filter = make_image(3,3,1);
+    set_pixel(filter, 0, 0, 0, -1.0);
+    set_pixel(filter, 2, 0, 0, 1.0);
+    set_pixel(filter, 0, 1, 0, -2.0);
+    set_pixel(filter, 2, 1, 0, 2.0);
+    set_pixel(filter, 0, 2, 0, -1.0);
+    set_pixel(filter, 2, 2, 0, 1.0);
+    return filter;
 }
 
 image make_gy_filter()
 {
-    // TODO
-    return make_image(1,1,1);
+    image filter = make_image(3,3,1);
+    set_pixel(filter, 0, 0, 0, -1.0);
+    set_pixel(filter, 1, 0, 0, -2.0);
+    set_pixel(filter, 2, 0, 0, -1.0);
+    set_pixel(filter, 0, 2, 0, 1.0);
+    set_pixel(filter, 1, 2, 0, 2.0);
+    set_pixel(filter, 2, 2, 0, 1.0);
+    return filter;
 }
 
 void feature_normalize(image im)
 {
-    // TODO
+    int i, j, k;
+    float min, max, range, pixel;
+    min = INFINITY;
+    max = -INFINITY;
+    for (i = 0; i < im.w; i++) {
+        for (j = 0; j < im.h; j++) {
+            for (k = 0; k < im.c; k++) {
+                pixel = get_pixel(im, i, j, k);
+                min = ( pixel < min ) ? pixel : min;
+                max = ( pixel > max ) ? pixel : max;
+            }
+        }
+    }
+
+    range = max - min;
+    for (i = 0; i < im.w; i++) {
+        for (j = 0; j < im.h; j++) {
+            for (k = 0; k < im.c; k++) {
+                pixel = get_pixel(im, i, j, k);
+                pixel = (pixel - min)/range;
+                set_pixel(im, i, j, k, pixel);
+            }
+        }
+    }
 }
 
 image *sobel_image(image im)
 {
-    // TODO
-    return calloc(2, sizeof(image));
+    image *combined = calloc(2, sizeof(image));
+    int i, j, k;
+    float gx_pixel, gy_pixel;
+    combined[0] = make_image(im.w, im.h, im.c);
+    combined[1] = make_image(im.w, im.h, im.c);
+    image gx = convolve_image(im, make_gx_filter(), 1);
+    image gy = convolve_image(im, make_gy_filter(), 1);
+    for (i = 0; i < im.w; i++) {
+        for (j = 0; j < im.h; j++) {
+            for (k = 0; k < im.c; k++) {
+                gx_pixel = get_pixel(gx, i, j, k);
+                gy_pixel = get_pixel(gy, i, j, k);
+                set_pixel(combined[0], i, j, k, hypot(gx_pixel, gy_pixel));
+                set_pixel(combined[1], i, j, k, atan2(gy_pixel, gx_pixel));
+            }
+        }
+    }
+    return combined;
 }
 
 image colorize_sobel(image im)
