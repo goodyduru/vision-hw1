@@ -160,22 +160,63 @@ image make_sharpen_filter()
 // Question 2.2.2: Do we have to do any post-processing for the above filters? Which ones and why?
 // Answer: Maybe emboss
 
+float gaussian_func ( int x, int y, float sigma) {
+    float fractional = 1 / (TWOPI*pow(sigma, 2));
+    float exponent = (pow(x, 2) + pow(y, 2)) / (2 * pow(sigma, 2));
+    return  fractional * exp(-exponent);
+}
+
 image make_gaussian_filter(float sigma)
 {
-    // TODO
-    return make_image(1,1,1);
+    int i, j;
+    int size = (int) sigma * 6;
+    size = ( size % 2 == 0 ) ? size + 1 : size;
+    image blank_image = make_image(size,size,1);
+    for (i = 0; i < size; i++) {
+        for (j = 0; j < size; j++) {
+            int x = i - blank_image.w/2;
+            int y = j - blank_image.h/2;
+            set_pixel(blank_image, i, j, 0, gaussian_func(x, y, sigma));
+        }
+    }
+    l1_normalize(blank_image);
+    return blank_image;
 }
 
 image add_image(image a, image b)
 {
-    // TODO
-    return make_image(1,1,1);
+    assert(a.w == b.w && a.h == b.h && a.c == b.c);
+    int i, j, k;
+    float pixel;
+    image final_image = make_image(a.w, a.h, a.c);
+    for (i = 0; i < a.w; i++) {
+        for (j = 0; j < a.h; j++) {
+            for (k = 0; k < a.c; k++) {
+                pixel = get_pixel(a, i, j, k);
+                pixel += get_pixel(b, i, j, k);
+                set_pixel(final_image, i, j, k, pixel);
+            }
+        }
+    }
+    return final_image;
 }
 
 image sub_image(image a, image b)
 {
-    // TODO
-    return make_image(1,1,1);
+    assert(a.w == b.w && a.h == b.h && a.c == b.c);
+    int i, j, k;
+    float pixel;
+    image final_image = make_image(a.w, a.h, a.c);
+    for (i = 0; i < a.w; i++) {
+        for (j = 0; j < a.h; j++) {
+            for (k = 0; k < a.c; k++) {
+                pixel = get_pixel(a, i, j, k);
+                pixel -= get_pixel(b, i, j, k);
+                set_pixel(final_image, i, j, k, pixel);
+            }
+        }
+    }
+    return final_image;
 }
 
 image make_gx_filter()
