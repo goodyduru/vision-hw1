@@ -273,9 +273,9 @@ void feature_normalize(image im)
 
 image *sobel_image(image im)
 {
-    image *combined = calloc(2, sizeof(image));
     int i, j;
     float gx_pixel, gy_pixel;
+    image *combined = calloc(2, sizeof(image));
     combined[0] = make_image(im.w, im.h, 1);
     combined[1] = make_image(im.w, im.h, 1);
     image gx = convolve_image(im, make_gx_filter(), 0);
@@ -293,6 +293,18 @@ image *sobel_image(image im)
 
 image colorize_sobel(image im)
 {
-    // TODO
-    return make_image(1,1,1);
+    int i, j;
+    float angle, mag;
+    image *combined = sobel_image(im);
+    image final_image = make_image(im.w, im.h, im.c);
+    for (i = 0; i < im.w; i++) {
+        for (j = 0; j < im.h; j++) {
+            mag = get_pixel(combined[0], i, j, 0);
+            angle = get_pixel(combined[1], i, j, 0);
+            set_pixel(final_image, i, j, 0, angle);
+            set_pixel(final_image, i, j, 1, mag);
+            set_pixel(final_image, i, j, 2, mag);
+        }
+    }
+    return final_image;
 }
